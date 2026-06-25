@@ -1,0 +1,104 @@
+{
+  "entities": {
+    "Hospital": {
+      "title": "Hospital",
+      "description": "Hospital facility data with emergency and bed availability metrics",
+      "type": "object",
+      "properties": {
+        "osm_id": {
+          "type": "string",
+          "description": "OpenStreetMap node/way ID"
+        },
+        "name": {
+          "type": "string",
+          "description": "Hospital name"
+        },
+        "latitude": {
+          "type": "number",
+          "description": "Latitude coordinate"
+        },
+        "longitude": {
+          "type": "number",
+          "description": "Longitude coordinate"
+        },
+        "hospital_type": {
+          "type": "string",
+          "enum": [
+            "government",
+            "private",
+            "clinic",
+            "unknown"
+          ],
+          "description": "Type of hospital"
+        },
+        "has_emergency": {
+          "type": "boolean",
+          "description": "Whether emergency services are available"
+        },
+        "phone": {
+          "type": "string",
+          "description": "Contact phone number"
+        },
+        "address": {
+          "type": "string",
+          "description": "Street address"
+        },
+        "beds": {
+          "type": "number",
+          "description": "Number of beds if available"
+        },
+        "operator": {
+          "type": "string",
+          "description": "Operating organization"
+        },
+        "website": {
+          "type": "string",
+          "description": "Hospital website"
+        },
+        "region": {
+          "type": "string",
+          "enum": [
+            "delhi",
+            "noida",
+            "gurugram"
+          ],
+          "description": "Which region this hospital is in"
+        },
+        "last_synced": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When this record was last synced from OSM"
+        }
+      },
+      "required": [
+        "name",
+        "latitude",
+        "longitude"
+      ]
+    },
+    "Donor": {
+      "title": "Donor",
+      "description": "Blood donor profile and availability",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "blood_group": { "type": "string" },
+        "latitude": { "type": "number" },
+        "longitude": { "type": "number" },
+        "status": { "type": "string", "enum": ["available", "busy", "en-route"] },
+        "last_donation": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "blood_group", "latitude", "longitude"]
+    }
+  },
+  "firestore": {
+    "/hospitals/{hospitalId}": {
+      "schema": "Hospital",
+      "description": "Collection of hospitals"
+    },
+    "/donors/{donorId}": {
+      "schema": "Donor",
+      "description": "Collection of blood donors"
+    }
+  }
+}

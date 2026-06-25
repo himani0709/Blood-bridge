@@ -1,0 +1,28 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidHospital(data) {
+      return data.name is string && data.name.size() > 0 &&
+             data.latitude is number &&
+             data.longitude is number;
+    }
+
+    match /hospitals/{hospitalId} {
+      allow read: if true; // Publicly readable for emergency lookup
+      allow write: if isSignedIn(); // Restricted to signed-in users (sync tasks)
+    }
+
+    match /donors/{donorId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && (request.auth.uid == donorId);
+    }
+  }
+}
